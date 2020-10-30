@@ -1,2 +1,2 @@
-# mlops-titanic
+# ML
 MLOps Examples
