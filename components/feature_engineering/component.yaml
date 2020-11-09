@@ -1,0 +1,63 @@
+# Copyright 2020 Google LLC
+# 
+# Licensed under the Apache License, Version 2.0 (the \"License\");
+# you may not use this file except in compliance with the License.\n",
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an \"AS IS\" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+name: 'feature_engineering'
+description: 'Feature engineering for the titanic dataset.'
+
+inputs:
+  - {
+      name: 'input_train_data',
+      type: GCSPath,
+      description: 'Path to the train dataset.'
+    }
+  - {
+      name: 'input_val_data',
+      type: GCSPath,
+      description: 'Path to the val dataset.'
+    }
+  - {
+      name: 'input_test_data',
+      type: GCSPath,
+      description: 'Path to the test dataset.'
+    }
+  - {
+      name: 'output_train_data',
+      type: GCSPath,
+      description: 'Path to the output train dataset.'
+    }
+  - {
+      name: 'output_val_data',
+      type: GCSPath,
+      description: 'Path to the output val dataset.'
+    }
+  - {
+      name: 'output_test_data',
+      type: GCSPath,
+      description: 'Path to the output test dataset.'
+    }
+
+implementation:
+  container:
+    image: gcr.io/mlops-293913/feature_engineering:latest
+
+    command: [python3, /src/feature_engineering.py]
+    args: [
+      --input_train_data, {inputValue: input_train_data},
+      --input_val_data, {inputValue: input_val_data},
+      --input_test_data, {inputValue: input_test_data},
+      --output_train_data, {inputValue: output_train_data},
+      --output_val_data, {inputValue: output_val_data},
+      --output_test_data, {inputValue: output_test_data},
+      ]

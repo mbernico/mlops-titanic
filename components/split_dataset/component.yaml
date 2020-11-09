@@ -34,7 +34,7 @@ inputs:
 
 implementation:
   container:
-    image: gcr.io/mlops-293913/split_dataset@sha256:bd73aa20dbc06d68b343686c76ecc115423ffeccbfccdda017b1991441f36561
+    image: gcr.io/mlops-293913/split_dataset:latest
     
     # command is a list of strings (command-line arguments). 
     # The YAML language has two syntaxes for lists and you can use either of them. 
