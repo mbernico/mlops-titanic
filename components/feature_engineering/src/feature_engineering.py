@@ -92,9 +92,9 @@ def main():
   args = parse_args()
   logging.getLogger().setLevel(args.log_level)
 
-  train_df = pd.read_csv(args.train_data)
-  val_df = pd.read_csv(args.val_data)
-  test_df = pd.read_csv(args.test_data)
+  train_df = pd.read_csv(args.input_train_data)
+  val_df = pd.read_csv(args.input_val_data)
+  test_df = pd.read_csv(args.input_test_data)
 
   imputer = MissingAgeImputer()
   train_df = imputer.fit_transform(train_df)
@@ -111,7 +111,7 @@ def main():
 
   train_df.to_csv(args.output_train_data)
   val_df.to_csv(args.output_val_data)
-  test_df.to_csv(args.output.test_dat)
+  test_df.to_csv(args.output_test_data)
 
 
 if __name__== "__main__":
