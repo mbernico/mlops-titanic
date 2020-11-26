@@ -29,11 +29,11 @@ inputs:
 outputs:
   - {
       name: 'train_location',
-      description: 'Location of train and val datasets.'
+      description: 'Location of train dataset.'
     }
   - {
       name: 'val_location',
-      description: 'Location of train and val datasets.'
+      description: 'Location of val dataset.'
     }
 
 implementation:

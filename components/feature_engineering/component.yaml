@@ -37,6 +37,19 @@ inputs:
       type: GCSPath,
       description: 'Path to the output feature engineered data.'
     }
+outputs:
+  - {
+      name: 'train_location',
+      description: 'Location of train dataset.'
+    }
+  - {
+      name: 'val_location',
+      description: 'Location of val dataset.'
+    }
+  - {
+      name: 'test_location',
+      description: 'Location of test dataset.'
+    }
 
 implementation:
   container:
