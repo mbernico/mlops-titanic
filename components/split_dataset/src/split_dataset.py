@@ -9,7 +9,6 @@
 """Script to split titanic dataset into train/val"""
 import argparse
 import datetime
-import json
 import logging
 import os
 import pandas as pd

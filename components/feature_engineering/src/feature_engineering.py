@@ -11,7 +11,9 @@
 from typing import List
 
 import argparse
+import datetime
 import logging
+import os
 import pandas as pd
 
 from imputer import MissingAgeImputer
@@ -65,7 +67,37 @@ def create_family_size(df: pd.DataFrame) -> pd.DataFrame:
 def create_ticket_freq(df: pd.DataFrame) -> pd.DataFrame:
   '''Create Ticket frequency distribution feature.'''
   df['Ticket_Frequency'] = df.groupby('Ticket')['Ticket'].transform('count')
+  df.drop(columns=['Ticket'], inplace=True)
   return df
+
+def write_file(path: str, content: str):
+  """Write string into local file.
+  Args:
+    path: the local path to the file.
+    content: the string content to dump.
+  """
+  directory = os.path.dirname(path)
+  if not os.path.exists(directory):
+    os.makedirs(directory)
+  elif os.path.exists(path):
+    logging.warning('The file %s will be overwritten.', path)
+  with open(path, 'w') as f:
+    f.write(content)
+
+def get_output_filenames(output_path: str):
+  """Returns a dict of output filenames."""
+  now = datetime.datetime.now()
+  now_string = now.strftime("%Y%m%d_%H%M%S")
+  filenames ={
+      'train': os.path.join(output_path, "train_fe_"+now_string+".csv"),
+      'val': os.path.join(output_path, "val_fet_"+now_string+".csv"),
+      'test': os.path.join(output_path, "test_fe_"+now_string+".csv"),
+  }
+  write_file("/tmp/train.txt", filenames['train'])
+  write_file("/tmp/val.txt", filenames['val'])
+  write_file("/tmp/test.txt", filenames['test'])
+
+  return filenames
 
 def parse_args():
   '''Parse command line arguments.'''
@@ -77,12 +109,8 @@ def parse_args():
       help="GCS Path to val dataset.")
   parser.add_argument('--input_test_data', type=str, required=True,
       help="GCS Path to test dataset.")
-  parser.add_argument('--output_train_data', type=str, required=True,
-      help='GCS Path to output train dataset.')
-  parser.add_argument('--output_val_data', type=str, required=True,
-      help="GCS Path to output val dataset.")
-  parser.add_argument('--output_test_data', type=str, required=True,
-      help="GCS Path to output test dataset.")
+  parser.add_argument('--output_path', type=str, required=True,
+      help='GCS Path to output feature engineered datasets.')
   parser.add_argument('--log_level', type=str, default="INFO",
       help="Logging level.")
   return parser.parse_args()
@@ -103,15 +131,16 @@ def main():
 
   feature_engineering = [create_title_feature, create_family_size,
                          create_deck_feature, fill_embarked,
-                         drop_unused_columns, create_ticket_freq]
+                         create_ticket_freq, drop_unused_columns]
 
   train_df = transform_dataset(train_df, feature_engineering)
   val_df = transform_dataset(val_df, feature_engineering)
   test_df = transform_dataset(test_df, feature_engineering)
 
-  train_df.to_csv(args.output_train_data)
-  val_df.to_csv(args.output_val_data)
-  test_df.to_csv(args.output_test_data)
+  filenames = get_output_filenames(args.output_path)
+  train_df.to_csv(filenames['train'])
+  val_df.to_csv(filenames['val'])
+  test_df.to_csv(filenames['test'])
 
 
 if __name__== "__main__":

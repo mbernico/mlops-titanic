@@ -33,19 +33,9 @@ inputs:
       description: 'Path to the test dataset.'
     }
   - {
-      name: 'output_train_data',
+      name: 'output_path',
       type: GCSPath,
-      description: 'Path to the output train dataset.'
-    }
-  - {
-      name: 'output_val_data',
-      type: GCSPath,
-      description: 'Path to the output val dataset.'
-    }
-  - {
-      name: 'output_test_data',
-      type: GCSPath,
-      description: 'Path to the output test dataset.'
+      description: 'Path to the output feature engineered data.'
     }
 
 implementation:
@@ -57,7 +47,9 @@ implementation:
       --input_train_data, {inputValue: input_train_data},
       --input_val_data, {inputValue: input_val_data},
       --input_test_data, {inputValue: input_test_data},
-      --output_train_data, {inputValue: output_train_data},
-      --output_val_data, {inputValue: output_val_data},
-      --output_test_data, {inputValue: output_test_data},
-      ]
+      --output_path, {inputValue: output_path},
+    ]
+    fileOutputs:
+      train_location: /tmp/train.txt
+      val_location: /tmp/val.txt
+      test_location: /tmp/test.txt
